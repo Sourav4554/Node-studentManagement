@@ -30,15 +30,28 @@ http
             res.end(data);
           }
         });
+      }else if(req.url==='/script.js'){
+      const jsPath=path.join(__dirname,'Public','script.js')
+      fs.readFile(jsPath,(err,data)=>{
+      if(err){
+      res.end(err)
+      return;
+      }else{
+      res.writeHead(200,{'Content-type':'application/javascript'})
+      res.end(data)
+      }
+      })
+      }else if(req.url==='/students'){
+      
       }
 
       //section for post request
     } else if (req.method === "POST" && req.url.startsWith('/submit')) {
-       console.log('submitted')
        let data=''
        req.on('data',(chunk)=>{
         data+=chunk.toString()
         const searchparams=new URLSearchParams(data)
+        //function evoke for add user to json file
         addUser({
             name:searchparams.get('name'),
             age:Number(searchparams.get('age')),
