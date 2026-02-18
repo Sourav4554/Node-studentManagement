@@ -1,0 +1,84 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+    .form-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    }
+    .form{
+    max-width: 70%;
+    background-color: #fff;
+    }
+    .form form{
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
+    gap: 20px;
+    }
+    form input,textarea,.grid input{
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    color: gray;
+    font-weight: bold;
+    border: 1px solid green;
+    outline: none;
+    }
+    input[type='submit']{
+    width: fit-content;
+    margin: auto;
+    font-size: 1.2rem;
+    padding: 0.5em 3em;
+    outline: none;
+    text-align: center;
+    background-color: green;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: #fff;
+    display: block;
+    margin-bottom: 5%;
+    cursor: pointer;
+    }
+    .grid-container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+    width: 90%;
+    height: auto;
+    margin: auto;
+    }
+    .grid{
+    background-color: #fff;
+    border: 1px solid green;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 2rem;
+    border-radius: 5px;
+    }
+    .grid p{
+    font-size: 1.3rem;
+    font-weight: bold;
+    }
+    .delete-btn,.edit-btn{
+    background-color: red;
+    width: fit-content;
+    font-size: 1.2rem;
+    padding: 0.5em 3em;
+    outline: none;
+    text-align: center;
+    border: 1px solid white;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    }
+    .edit-btn{
+    background-color: rgb(47, 0, 255)
+    }
+    .wrapper{
+    display: flex;
+    gap: 10px;
+    }
