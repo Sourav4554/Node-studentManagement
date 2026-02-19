@@ -2,7 +2,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const { addUser } = require("./addUser");
-
+const {deleteUser}=require('./deleteUser')
 const PORT = 8080;
 
 http
@@ -56,7 +56,7 @@ http
     
       //section for post request
     } else if (req.method === "POST" && req.url==='/submit') {
-      console.log('working')
+     
       let data = "";
       req.on("data", (chunk) => {
         data += chunk.toString();
@@ -71,7 +71,20 @@ http
       });
       //section for update request
     } else if (req.method === "PUT") {
-    }
+    }else if(req.method==='DELETE' && req.url==='/delete'){
+      console.log("delete req")
+      let id="";
+       req.on("data" , (chunk)=>{
+        id +=chunk.toString()
+      })
+     req.on("end",async()=>{
+      const deleteId=JSON.parse(id)
+      console.log(deleteId)
+      await deleteUser(deleteId)
+      res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Student deleted" }));
+      })
+      }
   })
   .listen(PORT, () => {
     console.log(`server running on http://localhost:${PORT}`);

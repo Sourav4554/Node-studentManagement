@@ -5,17 +5,16 @@ const age = document.querySelector("#age");
 const adress = document.querySelector("#address");
 const gridContainer = document.querySelector(".grid-container");
 
-
 //fetch Data from Server
-const fetchDataFromServer=async()=>{
-try {
-    const response=await fetch('http://localhost:8080/students');
-    const data=await response.json()
-    displayData(data)
-} catch (error) {
-    
-}
-}
+const fetchDataFromServer = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/students");
+    const data = await response.json();
+     displayData(data);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 //function for update task
 const updateData = (index, item) => {
   const div = gridContainer.children[index];
@@ -41,22 +40,39 @@ const updateData = (index, item) => {
   });
 };
 //function for delete data
-const deleteData = async (index, studentDetails) => {
+const deleteData = async (id) => {
+try {
+  console.log("trigger")
   
-  //displayData(studentDetails);
+  const response = await fetch(`http://localhost:8080/delete`, {
+    method: "DELETE",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(id),
+  });
+if(response){
+window.location.reload()
+ }
+  
+} catch (error) {
+  console.log(error);
+}
+
+
 };
 
 //function for display data
 const displayData = (studentDetails) => {
   gridContainer.innerHTML = "";
-  studentDetails.forEach((item, index) => {
+  studentDetails.forEach((item) => {
     //grid
     const grid = document.createElement("div");
     grid.classList.add("grid");
     Object.entries(item).forEach(([key, value]) => {
       const p = document.createElement("p");
-      if(key==="id"){
-      return
+      if (key === "id") {
+        return;
       }
       p.textContent = `${key} : ${value}`;
       grid.appendChild(p);
@@ -71,14 +87,14 @@ const displayData = (studentDetails) => {
     deleteBtn.classList.add("delete-btn");
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener("click", () => {
-      deleteData(index, studentDetails);
+      deleteData(item.id,studentDetails);
     });
     //edit button
     const editBtn = document.createElement("button");
     editBtn.classList.add("edit-btn");
     editBtn.textContent = "Edit";
     editBtn.addEventListener("click", () => {
-      updateData(index, item);
+      updateData(index);
     });
     wrapperdiv.append(deleteBtn, editBtn);
     gridContainer.appendChild(grid);
@@ -86,40 +102,38 @@ const displayData = (studentDetails) => {
 };
 
 const getData = async (e) => {
-    e.preventDefault();
-  
-    if (Studentname.value !== "" && age.value !== "" && adress.value !== "") {
-  
-      const student = {
-        name: Studentname.value,
-        age: Number(age.value),
-        address: adress.value,
-      };
-  
-      try {
-        const response = await fetch("http://localhost:8080/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(student)
-        });
-  
-        if (!response.ok) {
-          throw new Error("Failed to add student");
-        }
-  
-        form.reset();
-        fetchDataFromServer(); // reload updated data
-  
-      } catch (error) {
-        console.log(error.message);
+  e.preventDefault();
+
+  if (Studentname.value !== "" && age.value !== "" && adress.value !== "") {
+    const student = {
+      name: Studentname.value,
+      age: Number(age.value),
+      address: adress.value,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(student),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add student");
       }
-  
-    } else {
-      alert("All fields required");
+
+      form.reset();
+       await fetchDataFromServer();
+     
+    } catch (error) {
+      console.log(error.message);
     }
-  };
-  
-fetchDataFromServer()
+  } else {
+    alert("All fields required");
+  }
+};
+
+fetchDataFromServer();
 form.addEventListener("submit", getData);
