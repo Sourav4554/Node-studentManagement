@@ -2,6 +2,7 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 const { addUser } = require("./addUser");
+
 const PORT = 8080;
 
 http
@@ -30,38 +31,46 @@ http
             res.end(data);
           }
         });
-      }else if(req.url==='/script.js'){
-      const jsPath=path.join(__dirname,'Public','script.js')
-      fs.readFile(jsPath,(err,data)=>{
+      } else if (req.url === "/script.js") {
+        const jsPath = path.join(__dirname, "Public", "script.js");
+        fs.readFile(jsPath, (err, data) => {
+          if (err) {
+            res.end(err);
+            return;
+          } else {
+            res.writeHead(200, { "Content-type": "application/javascript" });
+            res.end(data);
+          }
+        });
+      } else if(req.url==='/students'){
+        const jsonFile=path.join(__dirname,'Public','user.json')
+      fs.readFile(jsonFile,(err,data)=>{
       if(err){
       res.end(err)
-      return;
       }else{
-      res.writeHead(200,{'Content-type':'application/javascript'})
+      res.writeHead(200,{'Content-type':'applicatin/json'})
       res.end(data)
       }
       })
-      }else if(req.url==='/students'){
-      
       }
-
+    
       //section for post request
-    } else if (req.method === "POST" && req.url.startsWith('/submit')) {
-       let data=''
-       req.on('data',(chunk)=>{
-        data+=chunk.toString()
-        const searchparams=new URLSearchParams(data)
-        //function evoke for add user to json file
-        addUser({
-            name:searchparams.get('name'),
-            age:Number(searchparams.get('age')),
-            address:searchparams.get('address')
-        })
-       })
-
+    } else if (req.method === "POST" && req.url==='/submit') {
+      console.log('working')
+      let data = "";
+      req.on("data", (chunk) => {
+        data += chunk.toString();
+      });
+      req.on("end", async () => {
+        const parsedData = JSON.parse(data);
+    
+        await addUser(parsedData);
+    
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Student added" }));
+      });
       //section for update request
     } else if (req.method === "PUT") {
-
     }
   })
   .listen(PORT, () => {
