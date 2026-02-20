@@ -40,17 +40,19 @@ const updateData = (index, item) => {
   });
 };
 //function for delete data
-const deleteData = async (id) => {
+const deleteData = async (_id) => {
+
 try {
   console.log("trigger")
-  
+  //console.log(id)
   const response = await fetch(`http://localhost:8080/delete`, {
     method: "DELETE",
-    headers: {
-      "Content-type": "application/json",
+    headers:{
+    'Content-type':'application/json'
     },
-    body: JSON.stringify(id),
+    body: JSON.stringify({_id}),
   });
+  console.log(response)
 if(response){
 window.location.reload()
  }
@@ -64,14 +66,16 @@ window.location.reload()
 
 //function for display data
 const displayData = (studentDetails) => {
+ // console.log(studentDetails)
   gridContainer.innerHTML = "";
   studentDetails.forEach((item) => {
+   // console.log(item)
     //grid
     const grid = document.createElement("div");
     grid.classList.add("grid");
     Object.entries(item).forEach(([key, value]) => {
       const p = document.createElement("p");
-      if (key === "id") {
+      if (key === "_id") {
         return;
       }
       p.textContent = `${key} : ${value}`;
@@ -87,7 +91,8 @@ const displayData = (studentDetails) => {
     deleteBtn.classList.add("delete-btn");
     deleteBtn.textContent = "Delete";
     deleteBtn.addEventListener("click", () => {
-      deleteData(item.id,studentDetails);
+   
+      deleteData(item._id);
     });
     //edit button
     const editBtn = document.createElement("button");
